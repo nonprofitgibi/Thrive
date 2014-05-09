@@ -344,6 +344,7 @@ function Microbe:addOrganelle(q, r, organelle)
     organelle.sceneNode.parent = self.entity
     organelle.sceneNode.transform.position = translation
     organelle.sceneNode.transform:touch()
+    print("adding capacity")
     organelle:onAddedToMicrobe(self, q, r)
     self:_updateAllHexColours()
     self.microbe.hitpoints = (self.microbe.hitpoints/self.microbe.maxHitpoints) * (self.microbe.maxHitpoints + MICROBE_HITPOINTS_PER_ORGANELLE)
@@ -355,6 +356,7 @@ function Microbe:addOrganelle(q, r, organelle)
     if organelle:getHex(localQ, localR) ~= nil then
         return organelle
     end
+       
     return true
 end
 
@@ -367,6 +369,7 @@ function Microbe:addStorageOrganelle(storageOrganelle)
     assert(storageOrganelle.capacity ~= nil)
     
     self.microbe.capacity = self.microbe.capacity + storageOrganelle.capacity
+
 end
 
 -- Removes a storage organelle
@@ -699,8 +702,23 @@ function Microbe:kill()
         self:destroy()
         showMessage("VICTORY!!!")
     end
-   
 end
+
+-- Copies this microbe. The new microbe will not have the stored compounds of this one. 
+function Microbe:reproduce()
+
+    copy = Microbe.createMicrobeEntity(nil, true)
+    for _, organelle in pairs(self.microbe.organelles) do
+        local organelleStorage = organelle:storage()
+        local organelle = Organelle.loadOrganelle(organelleStorage)
+        copy:addOrganelle(organelle.position.q, organelle.position.r, organelle)
+    end
+    copy.rigidBody.dynamicProperties.position = Vector3(self.rigidBody.dynamicProperties.position.x, self.rigidBody.dynamicProperties.position.y, 0)
+    copy:storeCompound(CompoundRegistry.getCompoundId("atp"), 20, false)
+    copy.microbe:updateSafeAngles()
+    copy.microbe:_resetCompoundPriorities()  
+end
+
 
 -- Updates the microbe's state
 function Microbe:update(milliseconds)
@@ -761,11 +779,12 @@ function Microbe:update(milliseconds)
             for compoundId, amount in pairs(excessCompounds) do
                 if amount > 0 then
                     self:ejectCompound(compoundId, amount, 160, 200, true)
+                    print(self.microbe.compoundPriorities[compoundId])
                 end
             end
             -- Damage microbe if its too low on ATP
-            if self.microbe.compounds[CompoundRegistry.getCompoundId("atp")] < 1.0 then
-                if not self.playerAlreadyShownAtpDamage then
+            if self.microbe.compounds[CompoundRegistry.getCompoundId("atp")] ~= nil and self.microbe.compounds[CompoundRegistry.getCompoundId("atp")] < 1.0 then
+                if self.microbe.isPlayerMicrobe and not self.playerAlreadyShownAtpDamage then
                     self.playerAlreadyShownAtpDamage = true
                     showMessage("No ATP hurts you!")
                 end
