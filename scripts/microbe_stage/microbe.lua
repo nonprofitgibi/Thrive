@@ -344,7 +344,6 @@ function Microbe:addOrganelle(q, r, organelle)
     organelle.sceneNode.parent = self.entity
     organelle.sceneNode.transform.position = translation
     organelle.sceneNode.transform:touch()
-    print("adding capacity")
     organelle:onAddedToMicrobe(self, q, r)
     self:_updateAllHexColours()
     self.microbe.hitpoints = (self.microbe.hitpoints/self.microbe.maxHitpoints) * (self.microbe.maxHitpoints + MICROBE_HITPOINTS_PER_ORGANELLE)
@@ -779,7 +778,6 @@ function Microbe:update(milliseconds)
             for compoundId, amount in pairs(excessCompounds) do
                 if amount > 0 then
                     self:ejectCompound(compoundId, amount, 160, 200, true)
-                    print(self.microbe.compoundPriorities[compoundId])
                 end
             end
             -- Damage microbe if its too low on ATP
