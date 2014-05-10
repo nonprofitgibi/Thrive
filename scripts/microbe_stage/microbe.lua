@@ -304,6 +304,7 @@ function Microbe:__init(entity)
     end
     self:_updateCompoundAbsorber()
     self.playerAlreadyShownAtpDamage = false
+    self.playerAlreadyShownVictory = false
 end
 
 
@@ -694,7 +695,10 @@ function Microbe:kill()
         microbeSceneNode.visible = false
     else
         self:destroy()
-        showMessage("VICTORY!!!")
+        if not self.playerAlreadyShownVictory then
+            self.playerAlreadyShownVictory = true
+            showMessage("VICTORY!!!")
+        end
     end
 end
 
@@ -711,6 +715,7 @@ function Microbe:reproduce()
     copy:storeCompound(CompoundRegistry.getCompoundId("atp"), 20, false)
     copy.microbe:updateSafeAngles()
     copy.microbe:_resetCompoundPriorities()  
+    copy.entity:addComponent(SpawnedComponent())
 end
 
 

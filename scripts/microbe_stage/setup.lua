@@ -178,10 +178,19 @@ local function createSpawnSystem()
         local nucleusOrganelle = NucleusOrganelle()
         nucleusOrganelle:addHex(0, 0)
         nucleusOrganelle:setColour(ColourValue(0.8, 0.2, 0.8, 1))
-        local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 10}
+        local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 6,
+                                [CompoundRegistry.getCompoundId("glucose")] = 6,
+                                [CompoundRegistry.getCompoundId("oxygen")] = 6}
         local outputCompounds = {[CompoundRegistry.getCompoundId("reproductase")] = 1}
-        local reproducer = Process(1.5, 30, inputCompounds, outputCompounds)
+        local reproducer = Process(2.2, 30, inputCompounds, outputCompounds)
         nucleusOrganelle:addProcess(reproducer)
+        inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
+                          [CompoundRegistry.getCompoundId("ammonia")] = 1,}
+        outputCompounds = {[CompoundRegistry.getCompoundId("co2")] = 1,
+                           [CompoundRegistry.getCompoundId("atp")] = 2,
+                           [CompoundRegistry.getCompoundId("aminoacids")] = 1}
+        local aminosynthesizer = Process(3.5, 0, inputCompounds, outputCompounds)
+        nucleusOrganelle:addProcess(aminosynthesizer)
         microbe:addOrganelle(0, 0, nucleusOrganelle)
         -- Forward
         local forwardOrganelle = MovementOrganelle(
@@ -327,11 +336,19 @@ function createStarterMicrobe(name, aiControlled)
     nucleusOrganelle:addHex(0, 0)
     nucleusOrganelle:setColour(ColourValue(0.8, 0.2, 0.8, 1))
     
-    local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 10}
+    local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 6,
+                            [CompoundRegistry.getCompoundId("glucose")] = 6,
+                            [CompoundRegistry.getCompoundId("oxygen")] = 6}
     local outputCompounds = {[CompoundRegistry.getCompoundId("reproductase")] = 1}
-    local reproducer = Process(1.5, 30, inputCompounds, outputCompounds)
-    
+    local reproducer = Process(2.2, 30, inputCompounds, outputCompounds)
     nucleusOrganelle:addProcess(reproducer)
+    inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
+                      [CompoundRegistry.getCompoundId("ammonia")] = 1,}
+    outputCompounds = {[CompoundRegistry.getCompoundId("co2")] = 1,
+                       [CompoundRegistry.getCompoundId("atp")] = 2,
+                       [CompoundRegistry.getCompoundId("aminoacids")] = 1}
+    local aminosynthesizer = Process(3.5, 0, inputCompounds, outputCompounds)
+    nucleusOrganelle:addProcess(aminosynthesizer)
     
     microbe:addOrganelle(0, 0, nucleusOrganelle)
     -- Forward

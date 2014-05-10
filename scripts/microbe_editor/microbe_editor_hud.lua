@@ -24,21 +24,21 @@ function MicrobeEditorHudSystem:init(gameState)
     local mitochondriaButton = root:getChild("EditorTools"):getChild("MitochondriaItem")
     local vacuoleButton = root:getChild("EditorTools"):getChild("VacuoleItem")
     local toxinButton = root:getChild("EditorTools"):getChild("ToxinItem")
-    local aminoSynthesizerButton = root:getChild("EditorTools"):getChild("AminoSynthesizerItem")
+    --local aminoSynthesizerButton = root:getChild("EditorTools"):getChild("AminoSynthesizerItem")
     local removeButton = root:getChild("EditorTools"):getChild("RemoveItem")
     self.organelleButtons["Nucleus"] = nucleusButton
     self.organelleButtons["Flagelium"] = flageliumButton
     self.organelleButtons["Mitochondria"] = mitochondriaButton
     self.organelleButtons["Vacuole"] = vacuoleButton
     self.organelleButtons["Toxin"] = toxinButton
-    self.organelleButtons["AminoSynthesizer"] = aminoSynthesizerButton
+    --self.organelleButtons["AminoSynthesizer"] = aminoSynthesizerButton
     self.organelleButtons["Remove"] = removeButton
     nucleusButton:getChild("Nucleus"):registerEventHandler("Clicked", nucleusClicked)
     flageliumButton:getChild("Flagelium"):registerEventHandler("Clicked", flageliumClicked)
     mitochondriaButton:getChild("Mitochondria"):registerEventHandler("Clicked", mitochondriaClicked)
     vacuoleButton:getChild("Vacuole"):registerEventHandler("Clicked", vacuoleClicked)
     toxinButton:getChild("Toxin"):registerEventHandler("Clicked", toxinClicked)
-    aminoSynthesizerButton:getChild("AminoSynthesizer"):registerEventHandler("Clicked", aminoSynthesizerClicked)
+    --aminoSynthesizerButton:getChild("AminoSynthesizer"):registerEventHandler("Clicked", aminoSynthesizerClicked)
     removeButton:getChild("Remove"):registerEventHandler("Clicked", removeClicked)
     
  
@@ -103,9 +103,9 @@ function MicrobeEditorHudSystem:update(milliseconds)
      elseif  Engine.keyboard:wasKeyPressed(Keyboard.KC_M) and self.editor.currentMicrobe ~= nil then
          mitochondriaClicked()  
          self.editor:performLocationAction()
-     elseif  Engine.keyboard:wasKeyPressed(Keyboard.KC_A) and self.editor.currentMicrobe ~= nil then
-         aminoSynthesizerClicked()
-         self.editor:performLocationAction()
+   --  elseif  Engine.keyboard:wasKeyPressed(Keyboard.KC_A) and self.editor.currentMicrobe ~= nil then
+   --      aminoSynthesizerClicked()
+   --      self.editor:performLocationAction()
      elseif  Engine.keyboard:wasKeyPressed(Keyboard.KC_ESCAPE) then
          menuButtonClicked()
      elseif  Engine.keyboard:wasKeyPressed(Keyboard.KC_F2) then

@@ -21,7 +21,7 @@ function MicrobeEditor:__init(hudSystem)
                                ["toxin"] = MicrobeEditor.addAgentVacuole,
                                
                                ["vacuole"] = MicrobeEditor.addStorageOrganelle,
-                               ["aminosynthesizer"] = MicrobeEditor.addProcessOrganelle,
+                             --  ["aminosynthesizer"] = MicrobeEditor.addProcessOrganelle,
                                ["remove"] = MicrobeEditor.removeOrganelle}
 end
 
@@ -142,17 +142,17 @@ function MicrobeEditor:addProcessOrganelle(organelleType)
             processOrganelle:setColour(ColourValue(0.8, 0.4, 0.5, 0))
             
             self.currentMicrobe:addOrganelle(q,r, processOrganelle)
-        elseif organelleType == "aminosynthesizer" then         
-            local inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
-                                    [CompoundRegistry.getCompoundId("ammonia")] = 1,}
-            local outputCompounds = {[CompoundRegistry.getCompoundId("co2")] = 1,
-                                     [CompoundRegistry.getCompoundId("atp")] = 2,
-                                     [CompoundRegistry.getCompoundId("aminoacids")] = 1}
-            local aminosynthesizer = Process(2.5, 0, inputCompounds, outputCompounds)
-            processOrganelle:addProcess(aminosynthesizer)
-            processOrganelle:addHex(0, 0)
-            processOrganelle:setColour(ColourValue(0.8, 0.75, 0.35, 0))
-            self.currentMicrobe:addOrganelle(q,r, processOrganelle)
+     --   elseif organelleType == "aminosynthesizer" then         
+     --       local inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
+     --                               [CompoundRegistry.getCompoundId("ammonia")] = 1,}
+     --       local outputCompounds = {[CompoundRegistry.getCompoundId("co2")] = 1,
+     --                                [CompoundRegistry.getCompoundId("atp")] = 2,
+     --                                [CompoundRegistry.getCompoundId("aminoacids")] = 1}
+     --       local aminosynthesizer = Process(3.0, 0, inputCompounds, outputCompounds)
+     --       processOrganelle:addProcess(aminosynthesizer)
+     --       processOrganelle:addHex(0, 0)
+     --       processOrganelle:setColour(ColourValue(0.8, 0.75, 0.35, 0))
+     --       self.currentMicrobe:addOrganelle(q,r, processOrganelle)
         else
             assert(false, "organelleType did not exist")
         end
@@ -184,11 +184,19 @@ function MicrobeEditor:addNucleus()
     nucleusOrganelle:setColour(ColourValue(0.8, 0.2, 0.8, 1))
     self.currentMicrobe:addOrganelle(0, 0, nucleusOrganelle)
     
-    local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 10}
+    local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 6,
+                            [CompoundRegistry.getCompoundId("glucose")] = 6,
+                            [CompoundRegistry.getCompoundId("oxygen")] = 6}
     local outputCompounds = {[CompoundRegistry.getCompoundId("reproductase")] = 1}
-    local reproducer = Process(1.5, 30, inputCompounds, outputCompounds)
-    
+    local reproducer = Process(2.2, 30, inputCompounds, outputCompounds)
     nucleusOrganelle:addProcess(reproducer)
+    inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
+                      [CompoundRegistry.getCompoundId("ammonia")] = 1,}
+    outputCompounds = {[CompoundRegistry.getCompoundId("co2")] = 1,
+                       [CompoundRegistry.getCompoundId("atp")] = 2,
+                       [CompoundRegistry.getCompoundId("aminoacids")] = 1}
+    local aminosynthesizer = Process(3.5, 0, inputCompounds, outputCompounds)
+    nucleusOrganelle:addProcess(aminosynthesizer)
 end
 
 function MicrobeEditor:createNewMicrobe()
