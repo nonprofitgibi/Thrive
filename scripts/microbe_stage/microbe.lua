@@ -7,20 +7,14 @@
 class 'MicrobeComponent' (Component)
 
 COMPOUND_PROCESS_DISTRIBUTION_INTERVAL = 100 -- quantity of physics time between each loop distributing compounds to organelles. TODO: Modify to reflect microbe size.
-
 BANDWIDTH_PER_ORGANELLE = 0.5 -- amount the microbes maxmimum bandwidth increases with per organelle added. This is a temporary replacement for microbe surface area
-
 BANDWIDTH_REFILL_DURATION = 1000 -- The amount of time it takes for the microbe to regenerate an amount of bandwidth equal to maxBandwidth
-
 STORAGE_EJECTION_THRESHHOLD = 0.8
-
 EXCESS_COMPOUND_COLLECTION_INTERVAL = 1000 -- The amount of time between each loop to maintaining a fill level below STORAGE_EJECTION_THRESHHOLD and eject useless compounds
-
 ANGLE_RADIUS_DIVISION_COUNT = 4 -- How many pizza slices the microbes angles are divided into. Higher is more precision but also more errors. 4 Seems to give no significant errors
-
 MICROBE_HITPOINTS_PER_ORGANELLE = 10
-
 MINIMUM_AGENT_EMISSION_AMOUNT = 1
+REPRODUCTASE_TO_SPLIT = 5
 
 function MicrobeComponent:__init(isPlayerMicrobe)
     Component.__init(self)
@@ -54,6 +48,7 @@ function MicrobeComponent:_resetCompoundPriorities()
         self.compoundPriorities[compound] = 0
     end
     self.compoundPriorities[CompoundRegistry.getCompoundId("atp")] = 10
+    self.compoundPriorities[CompoundRegistry.getCompoundId("reproductase")] = 8
 end
 
 function MicrobeComponent:_updateCompoundPriorities() 
@@ -766,7 +761,6 @@ function Microbe:update(milliseconds)
             for compoundId,_ in pairs(self.microbe.compounds) do
                 if self.microbe.compoundPriorities[compoundId] == 0 and self.microbe.compounds[compoundId] > 1 then
                     local uselessCompoundAmount
-                    
                     uselessCompoundAmount = self.microbe:getBandwidth(self.microbe.compounds[compoundId], compoundId)
                     if excessCompounds[compoundId] ~= nil then
                         excessCompounds[compoundId] = excessCompounds[compoundId] + self:takeCompound(compoundId, uselessCompoundAmount)
@@ -787,6 +781,11 @@ function Microbe:update(milliseconds)
                     showMessage("No ATP hurts you!")
                 end
                 self:damage(EXCESS_COMPOUND_COLLECTION_INTERVAL * 0.00002  * self.microbe.maxHitpoints) -- Microbe takes 2% of max hp per second in damage
+            end
+            -- Split microbe if it has enough reproductase
+            if self.microbe.compounds[CompoundRegistry.getCompoundId("reproductase")] ~= nil and self.microbe.compounds[CompoundRegistry.getCompoundId("reproductase")] > REPRODUCTASE_TO_SPLIT then
+                self:takeCompound(CompoundRegistry.getCompoundId("reproductase"), 5)
+                self:reproduce()
             end
             self.microbe.compoundCollectionTimer = self.microbe.compoundCollectionTimer - EXCESS_COMPOUND_COLLECTION_INTERVAL
         end

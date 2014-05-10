@@ -21,6 +21,7 @@ function MicrobeEditor:__init(hudSystem)
                                ["toxin"] = MicrobeEditor.addAgentVacuole,
                                
                                ["vacuole"] = MicrobeEditor.addStorageOrganelle,
+                               ["aminosynthesizer"] = MicrobeEditor.addProcessOrganelle,
                                ["remove"] = MicrobeEditor.removeOrganelle}
 end
 
@@ -147,7 +148,7 @@ function MicrobeEditor:addProcessOrganelle(organelleType)
             local outputCompounds = {[CompoundRegistry.getCompoundId("co2")] = 1,
                                      [CompoundRegistry.getCompoundId("atp")] = 2,
                                      [CompoundRegistry.getCompoundId("aminoacids")] = 1}
-            local aminosynthesizer = Process(0.4, 0, inputCompounds, outputCompounds)
+            local aminosynthesizer = Process(2.5, 0, inputCompounds, outputCompounds)
             processOrganelle:addProcess(aminosynthesizer)
             processOrganelle:addHex(0, 0)
             processOrganelle:setColour(ColourValue(0.8, 0.75, 0.35, 0))
@@ -185,7 +186,7 @@ function MicrobeEditor:addNucleus()
     
     local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 10}
     local outputCompounds = {[CompoundRegistry.getCompoundId("reproductase")] = 1}
-    local reproducer = Process(0.1, 30, inputCompounds, outputCompounds)
+    local reproducer = Process(1.5, 30, inputCompounds, outputCompounds)
     
     nucleusOrganelle:addProcess(reproducer)
 end

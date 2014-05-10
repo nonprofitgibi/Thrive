@@ -178,6 +178,10 @@ local function createSpawnSystem()
         local nucleusOrganelle = NucleusOrganelle()
         nucleusOrganelle:addHex(0, 0)
         nucleusOrganelle:setColour(ColourValue(0.8, 0.2, 0.8, 1))
+        local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 10}
+        local outputCompounds = {[CompoundRegistry.getCompoundId("reproductase")] = 1}
+        local reproducer = Process(1.5, 30, inputCompounds, outputCompounds)
+        nucleusOrganelle:addProcess(reproducer)
         microbe:addOrganelle(0, 0, nucleusOrganelle)
         -- Forward
         local forwardOrganelle = MovementOrganelle(
@@ -209,9 +213,9 @@ local function createSpawnSystem()
         microbe:addOrganelle(-1, 0, storageOrganelle3)
         -- Producer making atp from oxygen and glucose
         local processOrganelle1 = ProcessOrganelle()
-        local inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
+        inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
                                 [CompoundRegistry.getCompoundId("oxygen")] = 6}
-        local outputCompounds = {[CompoundRegistry.getCompoundId("atp")] = 38,
+        outputCompounds = {[CompoundRegistry.getCompoundId("atp")] = 38,
                                 [CompoundRegistry.getCompoundId("co2")] = 6}
         local respiration = Process(0.5, 0, inputCompounds, outputCompounds)
         processOrganelle1:addProcess(respiration)
@@ -322,6 +326,13 @@ function createStarterMicrobe(name, aiControlled)
    local nucleusOrganelle = NucleusOrganelle()
     nucleusOrganelle:addHex(0, 0)
     nucleusOrganelle:setColour(ColourValue(0.8, 0.2, 0.8, 1))
+    
+    local inputCompounds = {[CompoundRegistry.getCompoundId("aminoacids")] = 10}
+    local outputCompounds = {[CompoundRegistry.getCompoundId("reproductase")] = 1}
+    local reproducer = Process(1.5, 30, inputCompounds, outputCompounds)
+    
+    nucleusOrganelle:addProcess(reproducer)
+    
     microbe:addOrganelle(0, 0, nucleusOrganelle)
     -- Forward
     local forwardOrganelle = MovementOrganelle(
@@ -378,9 +389,9 @@ function createStarterMicrobe(name, aiControlled)
     microbe:storeCompound(CompoundRegistry.getCompoundId("atp"), 20, false)
     -- Producer making atp from oxygen and glucose
     local processOrganelle1 = ProcessOrganelle()
-    local inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
+    inputCompounds = {[CompoundRegistry.getCompoundId("glucose")] = 1,
                         [CompoundRegistry.getCompoundId("oxygen")] = 6}
-    local outputCompounds = {[CompoundRegistry.getCompoundId("atp")] = 38,
+    outputCompounds = {[CompoundRegistry.getCompoundId("atp")] = 38,
                         [CompoundRegistry.getCompoundId("co2")] = 6}
     local respiration = Process(0.5, 0, inputCompounds, outputCompounds)
     processOrganelle1:addProcess(respiration)

@@ -24,7 +24,7 @@ end
 function HudSystem:init(gameState)
     System.init(self, gameState)
     self.rootGuiWindow =  gameState:rootGUIWindow()
-    self.compoundListBox = self.rootGuiWindow:getChild("CompoundList")
+    self.compoundListBox = self.rootGuiWindow:getChild("BottomSection"):getChild("CompoundList")
     self.hitpointsBar = self.rootGuiWindow:getChild("BottomSection"):getChild("LifeBar")
     self.hitpointsCountLabel = self.hitpointsBar:getChild("NumberLabel")
     local menuButton = self.rootGuiWindow:getChild("BottomSection"):getChild("MenuButton")
