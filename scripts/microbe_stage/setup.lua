@@ -51,7 +51,7 @@ end
 local function createSpawnSystem()
     local spawnSystem = SpawnSystem()
     
-    local testFunction = function(pos)
+    local spawnOxygenEmitter = function(pos)
         -- Setting up an emitter for oxygen
         local entity = Entity()
         -- Rigid body
@@ -92,7 +92,7 @@ local function createSpawnSystem()
         entity:addComponent(timedEmitter)
         return entity
     end
-    local testFunction2 = function(pos)
+    local spawnGlucoseEmitter = function(pos)
         -- Setting up an emitter for glucose
         local entity = Entity()
         -- Rigid body
@@ -126,6 +126,43 @@ local function createSpawnSystem()
         timedEmitter.particlesPerEmission = 1
         timedEmitter.potencyPerParticle = 1.0
         timedEmitter.emitInterval = 2000
+        entity:addComponent(timedEmitter)
+        return entity
+    end
+    local spawnAmmoniaEmitter = function(pos)
+        -- Setting up an emitter for glucose
+        local entity = Entity()
+        -- Rigid body
+        local rigidBody = RigidBodyComponent()
+        rigidBody.properties.friction = 0.2
+        rigidBody.properties.linearDamping = 0.8
+        rigidBody.properties.shape = SphereShape(HEX_SIZE)
+        rigidBody:setDynamicProperties(
+            pos,
+            Quaternion(Radian(Degree(math.random()*360)), Vector3(0, 0, 1)),
+            Vector3(0, 0, 0),
+            Vector3(0, 0, 0)
+        )
+        rigidBody.properties:touch()
+        entity:addComponent(rigidBody)
+        -- Scene node
+        local sceneNode = OgreSceneNodeComponent()
+        sceneNode.meshName = "hex.mesh"
+        entity:addComponent(sceneNode)
+        -- Emitter glucose
+        local glucoseEmitter = CompoundEmitterComponent()
+        entity:addComponent(glucoseEmitter)
+        glucoseEmitter.emissionRadius = 1
+        glucoseEmitter.maxInitialSpeed = 10
+        glucoseEmitter.minInitialSpeed = 2
+        glucoseEmitter.minEmissionAngle = Degree(0)
+        glucoseEmitter.maxEmissionAngle = Degree(360)
+        glucoseEmitter.particleLifeTime = 5000
+        local timedEmitter = TimedCompoundEmitterComponent()
+        timedEmitter.compoundId = CompoundRegistry.getCompoundId("ammonia")
+        timedEmitter.particlesPerEmission = 1
+        timedEmitter.potencyPerParticle = 1.0
+        timedEmitter.emitInterval = 1000
         entity:addComponent(timedEmitter)
         return entity
     end
@@ -220,8 +257,9 @@ local function createSpawnSystem()
     
     --Spawn one emitter on average once in every square of sidelength 10
     -- (square dekaunit?)
-    spawnSystem:addSpawnType(testFunction, 1/20^2, 30)
-    spawnSystem:addSpawnType(testFunction2, 1/20^2, 30)
+    spawnSystem:addSpawnType(spawnOxygenEmitter, 1/20^2, 30)
+    spawnSystem:addSpawnType(spawnGlucoseEmitter, 1/20^2, 30)
+    spawnSystem:addSpawnType(spawnAmmoniaEmitter, 1/1000, 30)
     spawnSystem:addSpawnType(microbeSpawnFunction, 1/6500, 40)
     spawnSystem:addSpawnType(toxinOrganelleSpawnFunction, 1/17000, 30)
     return spawnSystem
